@@ -8,89 +8,132 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Trading Dashboard Color System */
+    --background: 251 251 253;
+    --foreground: 15 23 42;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 255 255 255;
+    --card-foreground: 15 23 42;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 255 255 255;
+    --popover-foreground: 15 23 42;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Professional Trading Blue */
+    --primary: 59 130 246;
+    --primary-foreground: 248 250 252;
+    --primary-glow: 147 197 253;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 241 245 249;
+    --secondary-foreground: 30 41 59;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 248 250 252;
+    --muted-foreground: 100 116 139;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 236 254 255;
+    --accent-foreground: 8 145 178;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Trading Specific Colors */
+    --success: 34 197 94;
+    --success-foreground: 240 253 244;
+    --danger: 239 68 68;
+    --danger-foreground: 254 242 242;
+    --warning: 245 158 11;
+    --warning-foreground: 255 251 235;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --destructive: 239 68 68;
+    --destructive-foreground: 254 242 242;
 
-    --radius: 0.5rem;
+    --border: 226 232 240;
+    --input: 226 232 240;
+    --ring: 59 130 246;
 
-    --sidebar-background: 0 0% 98%;
+    --radius: 0.75rem;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    /* Sidebar */
+    --sidebar-background: 248 250 252;
+    --sidebar-foreground: 51 65 85;
+    --sidebar-primary: 30 58 138;
+    --sidebar-primary-foreground: 248 250 252;
+    --sidebar-accent: 241 245 249;
+    --sidebar-accent-foreground: 30 41 59;
+    --sidebar-border: 226 232 240;
+    --sidebar-ring: 59 130 246;
 
-    --sidebar-primary: 240 5.9% 10%;
+    /* Trading Gradients */
+    --gradient-primary: linear-gradient(135deg, rgb(59 130 246), rgb(147 197 253));
+    --gradient-success: linear-gradient(135deg, rgb(34 197 94), rgb(134 239 172));
+    --gradient-danger: linear-gradient(135deg, rgb(239 68 68), rgb(252 165 165));
+    --gradient-chart: linear-gradient(180deg, rgb(59 130 246 / 0.2), rgb(59 130 246 / 0.05));
 
-    --sidebar-primary-foreground: 0 0% 98%;
+    /* Trading Shadows */
+    --shadow-trading: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-glow: 0 0 0 1px rgb(59 130 246 / 0.1), 0 4px 16px rgb(59 130 246 / 0.15);
 
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Animation Variables */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.15s ease-out;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Dark Trading Theme */
+    --background: 2 6 23;
+    --foreground: 248 250 252;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 15 23 42;
+    --card-foreground: 248 250 252;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 15 23 42;
+    --popover-foreground: 248 250 252;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 147 197 253;
+    --primary-foreground: 15 23 42;
+    --primary-glow: 59 130 246;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 30 41 59;
+    --secondary-foreground: 226 232 240;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 30 41 59;
+    --muted-foreground: 148 163 184;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 8 47 73;
+    --accent-foreground: 125 211 252;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    /* Dark Trading Colors */
+    --success: 34 197 94;
+    --success-foreground: 2 6 23;
+    --danger: 248 113 113;
+    --danger-foreground: 2 6 23;
+    --warning: 251 191 36;
+    --warning-foreground: 2 6 23;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --destructive: 248 113 113;
+    --destructive-foreground: 2 6 23;
+
+    --border: 51 65 85;
+    --input: 51 65 85;
+    --ring: 147 197 253;
+
+    /* Dark Sidebar */
+    --sidebar-background: 15 23 42;
+    --sidebar-foreground: 203 213 225;
+    --sidebar-primary: 147 197 253;
+    --sidebar-primary-foreground: 15 23 42;
+    --sidebar-accent: 30 41 59;
+    --sidebar-accent-foreground: 226 232 240;
+    --sidebar-border: 51 65 85;
+    --sidebar-ring: 147 197 253;
+
+    /* Dark Gradients */
+    --gradient-primary: linear-gradient(135deg, rgb(147 197 253), rgb(59 130 246));
+    --gradient-success: linear-gradient(135deg, rgb(34 197 94), rgb(22 163 74));
+    --gradient-danger: linear-gradient(135deg, rgb(248 113 113), rgb(239 68 68));
+    --gradient-chart: linear-gradient(180deg, rgb(147 197 253 / 0.2), rgb(147 197 253 / 0.05));
+
+    /* Dark Shadows */
+    --shadow-trading: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+    --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.2), 0 1px 2px -1px rgb(0 0 0 / 0.2);
+    --shadow-glow: 0 0 0 1px rgb(147 197 253 / 0.2), 0 4px 16px rgb(147 197 253 / 0.25);
   }
 }
 
@@ -100,6 +143,90 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
   }
+
+  /* Trading Typography */
+  .font-mono {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  }
+
+  /* Trading Utility Classes */
+  .trading-card {
+    @apply bg-card border shadow-card rounded-xl p-6 transition-all duration-200 hover:shadow-glow;
+  }
+
+  .trading-metric {
+    @apply font-mono text-lg font-semibold tracking-tight;
+  }
+
+  .trading-label {
+    @apply text-sm font-medium text-muted-foreground uppercase tracking-wide;
+  }
+
+  .profit-text {
+    @apply text-green-600 dark:text-green-400;
+  }
+
+  .loss-text {
+    @apply text-red-600 dark:text-red-400;
+  }
+
+  .neutral-text {
+    @apply text-muted-foreground;
+  }
+
+  /* Animation Classes */
+  .animate-counter {
+    @apply transition-all duration-500 ease-out;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.3s ease-out;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.4s ease-out;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgb(59 130 246 / 0.4);
+  }
+  50% {
+    opacity: 0.8;
+    box-shadow: 0 0 0 8px rgb(59 130 246 / 0);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes number-change {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
 }
