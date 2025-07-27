@@ -185,7 +185,7 @@ const signalColumns: ColumnDef<TradingSignal>[] = [
     header: "Strength",
     cell: ({ row }) => (
       <div className="w-16">
-        <Progress value={row.getValue("strength") * 10} className="h-2" />
+        <Progress value={(row.getValue("strength") as number) * 10} className="h-2" />
         <span className="text-xs">{row.getValue("strength")}/10</span>
       </div>
     ),
