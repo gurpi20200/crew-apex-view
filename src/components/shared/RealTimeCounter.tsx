@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 
 interface RealTimeCounterProps {
@@ -8,6 +8,9 @@ interface RealTimeCounterProps {
   decimals?: number;
   duration?: number;
   className?: string;
+  trend?: 'up' | 'down' | 'neutral';
+  highlightChange?: boolean;
+  formatType?: 'currency' | 'percentage' | 'number';
 }
 
 export function RealTimeCounter({
@@ -16,11 +19,21 @@ export function RealTimeCounter({
   suffix = "",
   decimals = 0,
   duration = 1000,
-  className = ""
+  className = "",
+  trend = 'neutral',
+  highlightChange = false,
+  formatType = 'number'
 }: RealTimeCounterProps) {
   const [displayValue, setDisplayValue] = useState(value);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const previousValue = useRef(value);
 
   useEffect(() => {
+    if (previousValue.current !== value) {
+      setIsAnimating(true);
+      previousValue.current = value;
+    }
+
     const startValue = displayValue;
     const endValue = value;
     const startTime = Date.now();
@@ -37,20 +50,52 @@ export function RealTimeCounter({
 
       if (progress < 1) {
         requestAnimationFrame(updateValue);
+      } else {
+        setIsAnimating(false);
       }
     };
 
     requestAnimationFrame(updateValue);
-  }, [value, duration]);
+  }, [value, duration, displayValue]);
+
+  const formatValue = (val: number) => {
+    switch (formatType) {
+      case 'currency':
+        return new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals,
+        }).format(val);
+      case 'percentage':
+        return `${val.toFixed(decimals)}%`;
+      default:
+        return val.toFixed(decimals);
+    }
+  };
+
+  const getTrendColor = () => {
+    switch (trend) {
+      case 'up':
+        return 'text-profit';
+      case 'down':
+        return 'text-loss';
+      default:
+        return '';
+    }
+  };
 
   return (
     <motion.span
-      className={className}
+      className={`${className} ${getTrendColor()} ${highlightChange && isAnimating ? 'animate-pulse' : ''}`}
       initial={{ scale: 1 }}
-      animate={{ scale: [1, 1.05, 1] }}
+      animate={{ 
+        scale: isAnimating ? [1, 1.05, 1] : 1,
+        color: isAnimating && highlightChange ? ['currentColor', '#22c55e', 'currentColor'] : 'currentColor'
+      }}
       transition={{ duration: 0.3 }}
     >
-      {prefix}{displayValue.toFixed(decimals)}{suffix}
+      {prefix}{formatValue(displayValue)}{suffix}
     </motion.span>
   );
 }

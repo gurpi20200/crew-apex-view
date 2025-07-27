@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { LucideIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { RealTimeCounter } from "@/components/shared/RealTimeCounter";
 
 interface MetricCardProps {
   title: string;
@@ -11,6 +12,8 @@ interface MetricCardProps {
   trend?: "up" | "down" | "neutral";
   className?: string;
   children?: ReactNode;
+  isRealTime?: boolean;
+  formatType?: 'currency' | 'percentage' | 'number';
 }
 
 export function MetricCard({
@@ -22,6 +25,8 @@ export function MetricCard({
   trend = "neutral",
   className = "",
   children,
+  isRealTime = false,
+  formatType = 'currency',
 }: MetricCardProps) {
   const getTrendColor = () => {
     switch (trend) {
@@ -55,16 +60,28 @@ export function MetricCard({
         <Icon className="h-5 w-5 text-muted-foreground" />
       </CardHeader>
       <CardContent>
-        <div className="trading-metric mb-1 animate-counter">
-          {typeof value === "number" 
-            ? new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0,
-              }).format(value)
-            : value
-          }
+        <div className="trading-metric mb-1">
+          {typeof value === "number" && isRealTime ? (
+            <RealTimeCounter
+              value={value}
+              formatType={formatType}
+              trend={trend}
+              highlightChange={true}
+              decimals={formatType === 'currency' ? 0 : 2}
+              className="trading-metric"
+            />
+          ) : typeof value === "number" ? (
+            formatType === 'currency' 
+              ? new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                }).format(value)
+              : value
+          ) : (
+            value
+          )}
         </div>
         {formatChange()}
         {children}

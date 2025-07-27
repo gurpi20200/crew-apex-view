@@ -13,6 +13,9 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { ConnectionStatus } from "@/components/shared/ConnectionStatus";
+import { OptimisticUpdateIndicator } from "@/components/shared/OptimisticUpdateIndicator";
+import { useRealTimeData } from "@/hooks/useRealTimeData";
 
 interface DashboardHeaderProps {
   portfolioValue: number;
@@ -21,20 +24,16 @@ interface DashboardHeaderProps {
 }
 
 export function DashboardHeader({
-  portfolioValue = 125000,
-  dailyPnL = 2500,
+  portfolioValue: propPortfolioValue = 125000,
+  dailyPnL: propDailyPnL = 2500,
   dailyPnLPercent = 2.04,
 }: DashboardHeaderProps) {
-  const [isConnected, setIsConnected] = useState(true);
+  const { data, connectionHealth, status, pendingUpdates } = useRealTimeData();
   const [notifications, setNotifications] = useState(3);
 
-  // Simulate connection status
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIsConnected(Math.random() > 0.1); // 90% connected
-    }, 10000);
-    return () => clearInterval(interval);
-  }, []);
+  // Use real-time data if available, fallback to props
+  const portfolioValue = data.portfolioValue || propPortfolioValue;
+  const dailyPnL = data.dailyPnL || propDailyPnL;
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -54,20 +53,15 @@ export function DashboardHeader({
       <div className="flex items-center gap-4">
         <SidebarTrigger />
         
-        {/* Connection Status */}
-        <div className="flex items-center gap-2">
-          {isConnected ? (
-            <div className="flex items-center gap-2 text-success">
-              <Wifi className="h-4 w-4" />
-              <span className="text-sm font-medium">Connected</span>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2 text-danger">
-              <WifiOff className="h-4 w-4" />
-              <span className="text-sm font-medium">Disconnected</span>
-            </div>
-          )}
-        </div>
+        {/* Real-time Connection Status */}
+        <ConnectionStatus 
+          status={status}
+          latency={connectionHealth.latency}
+          lastUpdate={connectionHealth.lastHeartbeat}
+        />
+        
+        {/* Optimistic Updates Indicator */}
+        <OptimisticUpdateIndicator pendingCount={pendingUpdates} />
       </div>
 
       {/* Real-time P&L Display */}
