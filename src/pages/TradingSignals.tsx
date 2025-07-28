@@ -2,15 +2,18 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
 import { DataTable } from "@/components/shared/DataTable";
 import { RealTimeCounter } from "@/components/shared/RealTimeCounter";
+import { EnhancedSignalCard } from "@/components/signals/EnhancedSignalCard";
+import { SignalPerformanceTracker } from "@/components/signals/SignalPerformanceTracker";
+import { BatchSignalOperations } from "@/components/signals/BatchSignalOperations";
+import { IntelligentSignalFilter } from "@/components/signals/IntelligentSignalFilter";
 import { TradingSignal } from "@/types/trading";
 import { mockTradingSignals } from "@/data/mockData";
-import { TrendingUp, TrendingDown, Minus, Clock, Target, Shield, Search, Filter } from "lucide-react";
+import { TrendingUp, TrendingDown, Minus, Clock, Target, Shield, Brain, Zap } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
+import { toast } from "@/hooks/use-toast";
 
 function SignalCard({ signal }: { signal: TradingSignal }) {
   const [timeRemaining, setTimeRemaining] = useState("");
@@ -215,48 +218,91 @@ const signalColumns: ColumnDef<TradingSignal>[] = [
 export default function TradingSignals() {
   const [signals] = useState<TradingSignal[]>(mockTradingSignals);
   const [filteredSignals, setFilteredSignals] = useState<TradingSignal[]>(signals);
-  const [signalTypeFilter, setSignalTypeFilter] = useState<string>("all");
-  const [strategyFilter, setStrategyFilter] = useState<string>("all");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [activeTab, setActiveTab] = useState<'signals' | 'performance' | 'batch'>('signals');
 
-  useEffect(() => {
-    let filtered = signals;
-
-    if (signalTypeFilter !== "all") {
-      filtered = filtered.filter(signal => signal.signalType === signalTypeFilter);
+  // Mock performance data
+  const [performanceData] = useState([
+    {
+      strategy: 'Momentum',
+      totalSignals: 145,
+      successRate: 68.5,
+      avgReturn: 2.4,
+      avgHoldTime: 4.2,
+      lastWeekPerformance: 8.3,
+      confidenceAccuracy: 82.1,
+      bestPerformer: 'Momentum'
+    },
+    {
+      strategy: 'Mean Reversion',
+      totalSignals: 89,
+      successRate: 72.1,
+      avgReturn: 1.8,
+      avgHoldTime: 6.1,
+      lastWeekPerformance: 5.7,
+      confidenceAccuracy: 79.5,
+      bestPerformer: ''
+    },
+    {
+      strategy: 'Breakout',
+      totalSignals: 67,
+      successRate: 58.2,
+      avgReturn: 3.1,
+      avgHoldTime: 2.8,
+      lastWeekPerformance: 12.4,
+      confidenceAccuracy: 75.8,
+      bestPerformer: ''
+    },
+    {
+      strategy: 'Sentiment',
+      totalSignals: 112,
+      successRate: 64.3,
+      avgReturn: 1.9,
+      avgHoldTime: 5.3,
+      lastWeekPerformance: -2.1,
+      confidenceAccuracy: 71.2,
+      bestPerformer: ''
     }
+  ]);
 
-    if (strategyFilter !== "all") {
-      filtered = filtered.filter(signal => signal.strategy === strategyFilter);
-    }
+  const handleExecuteSignal = (signal: TradingSignal) => {
+    toast({
+      title: "Signal Execution",
+      description: `Executing ${signal.signalType} signal for ${signal.symbol}`,
+    });
+  };
 
-    if (searchTerm) {
-      filtered = filtered.filter(signal => 
-        signal.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        signal.companyName.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
+  const handleViewSignalDetails = (signal: TradingSignal) => {
+    toast({
+      title: "Signal Details",
+      description: `Opening detailed analysis for ${signal.symbol}`,
+    });
+  };
 
-    setFilteredSignals(filtered);
-  }, [signals, signalTypeFilter, strategyFilter, searchTerm]);
+  const handleBatchOperation = (signals: TradingSignal[], action: 'execute' | 'dismiss') => {
+    toast({
+      title: `Batch ${action === 'execute' ? 'Execution' : 'Dismissal'}`,
+      description: `${action === 'execute' ? 'Executing' : 'Dismissing'} ${signals.length} signals`,
+    });
+  };
 
   const activeSignals = signals.filter(s => new Date() < s.expiresAt);
   const avgConfidence = signals.reduce((acc, s) => acc + s.confidence, 0) / signals.length;
+  const highConfidenceSignals = signals.filter(s => s.confidence >= 80).length;
 
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Trading Signals</h1>
+          <h1 className="text-3xl font-bold">Advanced Trading Signals</h1>
           <p className="text-muted-foreground">
-            Real-time trading opportunities across all strategies
+            AI-powered trading opportunities with intelligent filtering and batch operations
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 text-sm">
             <div className="w-2 h-2 bg-profit rounded-full animate-pulse" />
-            <span>Live</span>
+            <span>Live AI Analysis</span>
           </div>
           <Button variant="destructive" size="sm">
             Emergency Stop
@@ -264,33 +310,77 @@ export default function TradingSignals() {
         </div>
       </div>
 
-      {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* Navigation Tabs */}
+      <div className="flex items-center gap-2">
+        <Button
+          variant={activeTab === 'signals' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => setActiveTab('signals')}
+          className="flex items-center gap-2"
+        >
+          <Target className="h-4 w-4" />
+          Live Signals
+        </Button>
+        <Button
+          variant={activeTab === 'performance' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => setActiveTab('performance')}
+          className="flex items-center gap-2"
+        >
+          <Brain className="h-4 w-4" />
+          Performance Analytics
+        </Button>
+        <Button
+          variant={activeTab === 'batch' ? 'default' : 'outline'}
+          size="sm"
+          onClick={() => setActiveTab('batch')}
+          className="flex items-center gap-2"
+        >
+          <Zap className="h-4 w-4" />
+          Batch Operations
+        </Button>
+      </div>
+
+      {/* Enhanced Key Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <Card className="trading-card">
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
               <Target className="h-4 w-4 text-muted-foreground" />
               <span className="text-sm text-muted-foreground">Active Signals</span>
             </div>
-            <p className="text-2xl font-bold">{activeSignals.length}</p>
+            <p className="text-2xl font-bold text-profit">{activeSignals.length}</p>
+            <p className="text-xs text-muted-foreground">+3 from last hour</p>
           </CardContent>
         </Card>
         <Card className="trading-card">
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              <Brain className="h-4 w-4 text-muted-foreground" />
               <span className="text-sm text-muted-foreground">Avg Confidence</span>
             </div>
-            <p className="text-2xl font-bold">{avgConfidence.toFixed(1)}%</p>
+            <p className="text-2xl font-bold text-primary">{avgConfidence.toFixed(1)}%</p>
+            <p className="text-xs text-muted-foreground">AI Validated</p>
           </CardContent>
         </Card>
         <Card className="trading-card">
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
               <Shield className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm text-muted-foreground">Best Strategy</span>
+              <span className="text-sm text-muted-foreground">High Confidence</span>
             </div>
-            <p className="text-lg font-bold">Momentum</p>
+            <p className="text-2xl font-bold text-profit">{highConfidenceSignals}</p>
+            <p className="text-xs text-muted-foreground">80%+ confidence</p>
+          </CardContent>
+        </Card>
+        <Card className="trading-card">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm text-muted-foreground">Success Rate</span>
+            </div>
+            <p className="text-2xl font-bold text-profit">68.5%</p>
+            <p className="text-xs text-muted-foreground">Last 30 days</p>
           </CardContent>
         </Card>
         <Card className="trading-card">
@@ -299,83 +389,86 @@ export default function TradingSignals() {
               <Clock className="h-4 w-4 text-muted-foreground" />
               <span className="text-sm text-muted-foreground">Last Update</span>
             </div>
-            <p className="text-sm">2 minutes ago</p>
+            <p className="text-sm font-medium">
+              <RealTimeCounter value={Date.now()} />
+            </p>
+            <p className="text-xs text-muted-foreground">Real-time sync</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Filters */}
-      <Card className="trading-card">
-        <CardContent className="p-4">
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Search className="h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search symbols..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-48"
-              />
+      {/* Content based on active tab */}
+      {activeTab === 'signals' && (
+        <>
+          {/* Intelligent Filter */}
+          <IntelligentSignalFilter
+            signals={signals}
+            onFilteredSignalsChange={setFilteredSignals}
+            onCriteriaChange={() => {}}
+          />
+
+          {/* Enhanced Active Signals Grid */}
+          <div>
+            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+              <Target className="h-5 w-5" />
+              Live Trading Signals
+              <Badge variant="secondary">{filteredSignals.length} signals</Badge>
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {filteredSignals.slice(0, 8).map((signal) => (
+                <EnhancedSignalCard 
+                  key={signal.id} 
+                  signal={signal}
+                  onExecute={handleExecuteSignal}
+                  onViewDetails={handleViewSignalDetails}
+                  showTechnicalDetails={true}
+                />
+              ))}
             </div>
-            <Select value={signalTypeFilter} onValueChange={setSignalTypeFilter}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Signal Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="BUY">BUY</SelectItem>
-                <SelectItem value="SELL">SELL</SelectItem>
-                <SelectItem value="HOLD">HOLD</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={strategyFilter} onValueChange={setStrategyFilter}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Strategy" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Strategies</SelectItem>
-                <SelectItem value="Momentum">Momentum</SelectItem>
-                <SelectItem value="Mean Reversion">Mean Reversion</SelectItem>
-                <SelectItem value="Breakout">Breakout</SelectItem>
-                <SelectItem value="Sentiment">Sentiment</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => {
-                setSignalTypeFilter("all");
-                setStrategyFilter("all");
-                setSearchTerm("");
-              }}
-            >
-              <Filter className="h-4 w-4 mr-2" />
-              Clear
-            </Button>
           </div>
-        </CardContent>
-      </Card>
 
-      {/* Active Signals Grid */}
-      <div>
-        <h2 className="text-xl font-semibold mb-4">Active Signals</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {filteredSignals.slice(0, 8).map((signal) => (
-            <SignalCard key={signal.id} signal={signal} />
-          ))}
+          {/* Enhanced Signals Table */}
+          <div>
+            <h2 className="text-xl font-semibold mb-4">Complete Signal Analysis</h2>
+            <DataTable
+              columns={signalColumns}
+              data={filteredSignals}
+              searchKey="symbol"
+              pageSize={25}
+            />
+          </div>
+        </>
+      )}
+
+      {activeTab === 'performance' && (
+        <SignalPerformanceTracker data={performanceData} />
+      )}
+
+      {activeTab === 'batch' && (
+        <div className="space-y-6">
+          <BatchSignalOperations
+            signals={filteredSignals}
+            onExecuteBatch={handleBatchOperation}
+            onFilterChange={() => {}}
+          />
+          
+          {/* Batch Preview Grid */}
+          <div>
+            <h2 className="text-xl font-semibold mb-4">Signal Preview for Batch Operations</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {filteredSignals.slice(0, 12).map((signal) => (
+                <EnhancedSignalCard 
+                  key={signal.id} 
+                  signal={signal}
+                  onExecute={handleExecuteSignal}
+                  onViewDetails={handleViewSignalDetails}
+                  showTechnicalDetails={false}
+                />
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
-
-      {/* Detailed Signals Table */}
-      <div>
-        <h2 className="text-xl font-semibold mb-4">All Signals</h2>
-        <DataTable
-          columns={signalColumns}
-          data={filteredSignals}
-          searchKey="symbol"
-          pageSize={25}
-        />
-      </div>
+      )}
     </div>
   );
 }
