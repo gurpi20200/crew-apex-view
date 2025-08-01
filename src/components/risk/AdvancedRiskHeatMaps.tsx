@@ -134,8 +134,11 @@ export const AdvancedRiskHeatMaps = ({
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          Advanced Risk Heat Maps
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2">
+            Advanced Risk Heat Maps
+            <Badge variant="secondary" className="text-xs">Multi-dimensional</Badge>
+          </CardTitle>
           <div className="flex items-center gap-4">
             <div className="flex items-center space-x-2">
               <Switch
@@ -147,19 +150,19 @@ export const AdvancedRiskHeatMaps = ({
                 Show percentages
               </Label>
             </div>
+            <div className="flex gap-2">
+              {metrics.map(metric => (
+                <Button
+                  key={metric.id}
+                  variant={selectedMetric === metric.id ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSelectedMetric(metric.id as any)}
+                >
+                  {metric.label}
+                </Button>
+              ))}
+            </div>
           </div>
-        </CardTitle>
-        <div className="flex gap-2">
-          {metrics.map(metric => (
-            <Button
-              key={metric.id}
-              variant={selectedMetric === metric.id ? "default" : "outline"}
-              size="sm"
-              onClick={() => setSelectedMetric(metric.id as any)}
-            >
-              {metric.label}
-            </Button>
-          ))}
         </div>
       </CardHeader>
       <CardContent>

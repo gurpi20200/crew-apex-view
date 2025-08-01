@@ -57,6 +57,7 @@ export const useAdvancedRiskMetrics = (
   const [metrics, setMetrics] = useState<AdvancedRiskMetrics | null>(null);
   const [isCalculating, setIsCalculating] = useState(false);
   const [lastUpdate, setLastUpdate] = useState<Date>(new Date());
+  const [error, setError] = useState<string | null>(null);
 
   // Monte Carlo simulation parameters
   const [simulationParams, setSimulationParams] = useState({
@@ -231,6 +232,7 @@ export const useAdvancedRiskMetrics = (
   // Main calculation function
   const calculateAdvancedMetrics = async (): Promise<AdvancedRiskMetrics> => {
     setIsCalculating(true);
+    setError(null);
 
     try {
       // Extract returns from historical data
@@ -286,6 +288,10 @@ export const useAdvancedRiskMetrics = (
       };
     } finally {
       setIsCalculating(false);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Unknown error');
+      setIsCalculating(false);
+      throw error;
     }
   };
 

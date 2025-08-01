@@ -141,12 +141,13 @@ export const AdvancedRiskControlPanel = ({
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2">
             <Settings className="h-5 w-5" />
             Advanced Risk Control Panel
             {isLocked && <Lock className="h-4 w-4 text-muted-foreground" />}
-          </div>
+            <Badge variant="secondary" className="text-xs">Live Controls</Badge>
+          </CardTitle>
           <div className="flex items-center gap-2">
             <Badge variant={emergencyMode ? "destructive" : "secondary"}>
               {emergencyMode ? "Emergency Mode" : "Normal"}
@@ -161,7 +162,7 @@ export const AdvancedRiskControlPanel = ({
               Emergency Stop
             </Button>
           </div>
-        </CardTitle>
+          </div>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="parameters" className="w-full">

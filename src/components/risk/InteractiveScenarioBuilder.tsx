@@ -213,8 +213,11 @@ export const InteractiveScenarioBuilder = () => {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            Interactive Scenario Builder
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              Interactive Scenario Builder
+              <Badge variant="secondary" className="text-xs">Monte Carlo</Badge>
+            </CardTitle>
             <div className="flex gap-2">
               <Button 
                 onClick={runScenario} 
@@ -237,7 +240,7 @@ export const InteractiveScenarioBuilder = () => {
                 Reset
               </Button>
             </div>
-          </CardTitle>
+          </div>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="builder" className="w-full">

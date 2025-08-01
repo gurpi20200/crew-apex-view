@@ -192,6 +192,27 @@ All colors MUST be HSL.
   .animate-fade-in {
     animation: fade-in 0.4s ease-out;
   }
+
+  /* 3D Visualization Enhancements */
+  .risk-3d-container {
+    @apply relative overflow-hidden rounded-lg border bg-card;
+  }
+
+  .risk-heatmap-cell {
+    @apply transition-all duration-200 hover:scale-105 hover:z-10 relative;
+  }
+
+  .risk-alert-critical {
+    @apply bg-loss/10 border-loss/20 text-loss;
+  }
+
+  .risk-alert-warning {
+    @apply bg-warning/10 border-warning/20 text-warning;
+  }
+
+  .risk-alert-normal {
+    @apply bg-profit/10 border-profit/20 text-profit;
+  }
 }
 
 @keyframes pulse-glow {

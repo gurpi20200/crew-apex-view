@@ -3,6 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Text } from '@react-three/drei';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from '@/components/ui/badge';
 import * as THREE from 'three';
 
 interface CorrelationData {
@@ -123,10 +124,13 @@ export const Risk3DSurface = ({ correlationData, symbols }: Risk3DSurfaceProps) 
   return (
     <Card className="w-full h-[600px]">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          3D Correlation Surface
+        <CardTitle className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            3D Correlation Surface
+            <Badge variant="secondary" className="text-xs">Interactive</Badge>
+          </div>
           <div className="text-sm text-muted-foreground font-normal">
-            Interactive correlation visualization
+            Drag to rotate • Scroll to zoom • Click symbols for details
           </div>
         </CardTitle>
       </CardHeader>

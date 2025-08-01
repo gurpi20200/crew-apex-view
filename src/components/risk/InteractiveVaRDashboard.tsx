@@ -100,8 +100,11 @@ export const InteractiveVaRDashboard = ({
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center justify-between">
-            Interactive VaR Dashboard
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              Interactive VaR Dashboard
+              <Badge variant="secondary" className="text-xs">Real-time</Badge>
+            </CardTitle>
             <div className="flex gap-2">
               <Badge variant="outline" className="flex items-center gap-1">
                 <Target className="h-3 w-3" />
@@ -111,7 +114,7 @@ export const InteractiveVaRDashboard = ({
                 {timeHorizon[0]} Day Horizon
               </Badge>
             </div>
-          </CardTitle>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-6">
